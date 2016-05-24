@@ -199,8 +199,17 @@ public class SamlSecurityRealm extends SecurityRealm {
     authorities.add(AUTHENTICATED_AUTHORITY);
     if (!groups.isEmpty()) {
       for (Object group : groups) {
-        SamlGroupAuthority ga = new SamlGroupAuthority((String)group);
-        authorities.add(ga);
+        String s = (String) group;
+        if (s.contains(";")) {
+          String[] groupNames = s.split(";");
+          for (String groupName : groupNames) {
+            SamlGroupAuthority ga = new SamlGroupAuthority(groupName);
+            authorities.add(ga);
+          }
+        } else {
+          SamlGroupAuthority ga = new SamlGroupAuthority((String) group);
+          authorities.add(ga);
+        }
       }
     }
 
